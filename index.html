@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <style>
+        #profile{
+            height: 5rem;
+            width: 5rem;
+            border-radius: 10%;
+            display: none;
+        }
+        body{
+            background-color: rgb(149, 180, 207);
+        }
+        #image{
+            border-radius: 25px 0 0 25px;
+            margin-left: 10px;
+            height: 4rem;
+            width: 4.5rem;
+            border: 1px solid black;
+            background: transparent;
+
+        }
+        .search {
+            display: flex;
+            justify-content: center;
+            background-color: rgba(126, 180, 228, 0.342);
+            padding: 10px;
+            margin: 10px;
+            border-radius: 25px;
+        }
+        .search input{
+            border:1px solid black;
+            width: 500px; 
+            padding-left: 10px;
+            color: white;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: transparent;
+        }
+        .search ::placeholder{
+            color: white;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .btn{
+            border-radius:0 25px 25px 0 ;
+            width:70px;
+            margin-right: 10px;
+            border:1px solid black;
+            background: transparent;
+        }
+        .narrow-table{
+            width: 70%;
+        }
+        table,
+        td,
+        th {
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th,
+        td {
+            padding: 15px;
+        }
+        #box{
+        height: 10rem;
+        width: 25rem;
+        padding: 10px;
+        margin-top: 10rem;
+        border: 1px black solid;
+        font-size: 10px;
+        background-color: rgba(126, 180, 228, 0.342);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        display: none;
+        margin-left: 35%;
+        border-radius: 20px;
+    }
+    #heading_table{
+        display: none;
+    }
+    #info{
+        align-items: start;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="box" >
+        
+    </div><br>
+    <div id="all">
+    <div class="search">
+        <img src="github.png" alt="github image" width="100px" id="image">
+        <input type="text" placeholder="Enter your github username " id="search-url" >&nbsp;
+        <button onclick="search()" class="btn">submit</button><br><br>
+    </div>
+    <br><br>
+        <center><img id="profile"></img><br><br>
+        </center>
+        <table align="center" class="table table-light table-striped table-hover narrow-table" id="result-table">
+            <tr scope="row" id="heading_table">
+                <th scope="col">S.No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Created At</th>
+                <th scope="col">Updated At</th>
+                <th scope="col">Days since last commit</th>
+            </tr>
+        </table>
+        
+        <a href="#" onclick="showRepoInfo(data[i]);"></a>
+<div>
+
+</div></div>
+    <script>
+        function search() {
+           
+        var searchRepoUrl = document.getElementById("search-url").value;
+          const api = `https://api.github.com/users/${searchRepoUrl}/repos`
+           fetch(`${api}`)
+                .then((res) => {
+                    return res.json()
+                })
+                .then((res) => {
+                    console.log(res)
+                    resultTable(res)
+                    
+                })
+        
+          const apiimg = `https://api.github.com/users/${searchRepoUrl}`
+          fetch(`${apiimg}`)
+                .then((ima) => {
+                    return ima.json()
+                })
+                .then((ima) => {
+                    console.log(ima)
+                    imag(ima)
+                    
+                })}
+        function imag(link){
+            debugger;
+            document.getElementById("profile").src = link.avatar_url;
+            document.getElementById("profile").style.display = "block";
+            
+        }
+        function resultTable(data) {
+            document.getElementById("heading_table").style.display="block";
+            const table = document.getElementById("result-table");
+            
+            table.innerHTML = "";
+            const headingRow = table.insertRow();
+            const headings = ["S.No", "Name", "Created At", "Updated At", "Days since last commit"];
+            const currentDate = new Date();
+            for (let i = 0; i < headings.length; i++) {
+                const headingCell = headingRow.insertCell(i);
+                headingCell.textContent = headings[i];
+            }
+            for (let i = 0; i < data.length; i++) {
+                const row = table.insertRow();
+
+                const indexCell = row.insertCell(0);
+                const nameCell = row.insertCell(1);
+                const createdAtCell = row.insertCell(2);
+                const updatedAtCell = row.insertCell(3);
+                const daysSinceLastCommitCell = row.insertCell(4);
+                indexCell.textContent = i + 1;
+                const repoLink = document.createElement('a');
+                repoLink.href = "#";
+                repoLink.textContent = data[i].name;
+                repoLink.onclick = function () {
+                    showRepoInfo(data[i]);
+                };
+                nameCell.appendChild(repoLink);
+                const createdAt = new Date(data[i].created_at);
+                createdAtCell.textContent = createdAt.toLocaleString();
+                const updatedAt = new Date(data[i].updated_at);
+                updatedAtCell.textContent = updatedAt.toLocaleString();
+                const daysSinceLastCommit = Math.ceil((currentDate - updatedAt) / (1000 * 60 * 60 * 24));
+                daysSinceLastCommitCell.textContent = daysSinceLastCommit;
+            }
+        }
+        function showRepoInfo(repo) {
+            const repoInfoContent = `
+                <h3>Repository Information &nbsp;&nbsp;<i class="fa fa-close" onclick='cancel();'></i></h3>
+               <div id="info"> Name of the repository: ${repo.name}<br>
+                Type: ${repo.private ? 'Private' : 'Public'}<br>
+                Forks: ${repo.forks}<br>
+                Open issues: ${repo.open_issues}<br>
+                Language used : ${repo.language}<br>
+                Has issues :${repo.has_issues}<br>
+                </div>
+         
+            `;  document.getElementById("box").innerHTML = repoInfoContent;
+            document.getElementById("box").style.display = "block";
+            document.getElementById("all").style.display = "none";
+         }
+        function cancel(){
+            document.getElementById("box").style.display = "none";
+            document.getElementById("all").style.display = "block";
+        }
+          
+    </script>
+</body>
+
+</html>
